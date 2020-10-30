@@ -18,12 +18,12 @@ const styles = StyleSheet.create({
        padding: 10,
     },
     textStyle: {
-      fontSize: 22,
-      color: 'black'
+      fontSize: 18,
+      color: '#191970'
     },
     textStyle1: {
       fontSize: 22,
-      color: 'black',
+      color: '#008b8b',
       fontWeight: 'bold',
     }
 });

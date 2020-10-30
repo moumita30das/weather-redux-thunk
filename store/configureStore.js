@@ -10,8 +10,8 @@ let middleWare = [reduxThunk];
 const persistConfig = {
    key:'root',
    storage: AsyncStorage,
-//    whitelist:['weatherReducer'],
-//    blacklist:['loginReducer'],
+   whitelist:['weather'],
+   blacklist:['login'],
 };
 const rootReducer = combineReducers(
     { login: loginReducer,

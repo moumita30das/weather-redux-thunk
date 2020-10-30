@@ -49,6 +49,16 @@ class Login extends Component {
             console.log(error.message);
         }
     }
+    savezipCode = async () => {
+        try {
+            console.log('zipcode saved')
+            await AsyncStorage.setItem('zipCode', this.state.zipCode);
+            console.log('zipcode saved')
+        } catch (error) {
+            console.log('zipcode not saved',error)
+            console.log(error.message);
+        }
+    }
     handleZipCode = (text) => {
         this.setState({ zipCode: text })
      }
@@ -57,12 +67,13 @@ class Login extends Component {
         let myusername = this.state.userName;
         let mypassword = this.state.password;
         let zipCode = this.state.zipCode;
+        console.log("zip code in form validation",zipCode);
         if (inputUsername == "" && inputPassword == "") {
             Alert.alert('Plese fill the Username and Password');
         }
         else if (inputUsername == myusername && inputPassword == mypassword) {
             if (zipCode.length == 6){
-                AsyncStorage.setItem('zipCode', zipCode);
+                this.savezipCode();
                 this.props.checkLogin(isLoggedIn);
                 Alert.alert('Success!');
             } else {

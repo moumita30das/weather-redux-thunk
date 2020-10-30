@@ -12,20 +12,25 @@ import AsyncStorage from '@react-native-community/async-storage';
         super(props);
         this.state = {
          data:[],
-         isConnected: false
+         isConnected: false,
+         zipCode:''
         };
     }
     
-   componentDidMount = () => { 
+   componentDidMount = async () => { 
      console.log("data is persisted",this.props.data);  
-    let zipCode = AsyncStorage.getItem('zipCode');
-    console.log('isConnected',this.state.isConnected);
+     await AsyncStorage.getItem('zipCode').then((value) => this.setState({ 'zipCode': value }));
+    console.log('zipCode',this.state.zipCode);
+    let countryCode = 'IN';
+    let zipCode = this.state.zipCode;
+    let code = zipCode + "," + countryCode;
+    console.log("code",code);
     NetInfo.fetch().then(state => {
         console.log("Connection type", state.type);
         console.log("Is connected?", state.isConnected);
         if (state.isConnected){
             console.log('fetch Data from api');
-            this.props.fetchActionCreator(zipCode); 
+            this.props.fetchActionCreator(code); 
         } else {
             console.log('fetch Data from store');
             this.props.requestPersistedForecastData();
@@ -126,7 +131,7 @@ const mapStateToProps = state => ({
     mapDispatchToProps
   )(weatherList);
 
-  
+
 const styles = StyleSheet.create({
     container: {
         flex:1,
@@ -138,10 +143,10 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     sectionHeaderStyle: {
-        backgroundColor: '#0dc4cd',
+        backgroundColor: '#50D9EA',
         fontSize: 20,
         padding: 5,
-        color: '#000',
+        color: '#2f4f4f',
       },
       sectionListItemStyle: {
         fontSize: 15,
