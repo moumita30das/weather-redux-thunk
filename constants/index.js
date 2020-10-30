@@ -1,0 +1,5 @@
+export const LOGIN_CLICK = 'LOGIN_CLICK'
+export const FETCH_REQUEST = 'FETCH_REQUEST'
+export const FETCH_SUCCESS = 'FETCH_SUCCESS'
+export const FETCH_ERROR = 'FETCH_ERROR'
+export const API_CALL_RESTORE ='API_CALL_RESTORE'
