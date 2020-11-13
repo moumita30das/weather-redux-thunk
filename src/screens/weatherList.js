@@ -8,14 +8,7 @@ import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from '@react-native-community/async-storage';
 var self
  class weatherList extends Component {
-    // static navigationOptions = {
-    //   //let headerTitleStyle = { color: 'red'};
-    //   headerRight:()=> { return <TouchableOpacity 
-    //     style={{backgroundColor: "#50D9EA",width:100,height:30}} onPress={self.goBack}>
-    //        <Text>Go Back</Text>
-    //     </TouchableOpacity>}
-    //   //return { headerTitleStyle,headerRight }
-    // }
+   
     constructor(props){
         super(props);
         this.state = {
@@ -95,7 +88,7 @@ var self
                 <ActivityIndicator size='large' color='#000' />
               </View>);
           };
-        const DATA = this.modifyData(forecastData);
+          const DATA = this.modifyData(forecastData);
         const SectionListItemSeparator = () => {
             return (
               <View style={styles.listItemSeparatorStyle} />
