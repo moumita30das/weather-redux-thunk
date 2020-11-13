@@ -3,8 +3,7 @@ import { fetchRequest, fetchSuccess, fetchError } from '../actions/apiAction';
 
 const fetchActionCreator = (zipCode) => {
     return function(dispatch) {
-        dispatch(fetchRequest());
-        
+        dispatch(fetchRequest()); 
         axios.get('https://api.openweathermap.org/data/2.5/forecast',{
                params: {
                  zip: zipCode,

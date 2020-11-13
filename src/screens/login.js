@@ -10,6 +10,7 @@ import { LOGIN_CLICK } from '../constants';
 
 
 var logoImage = require("../assets/logo-w.png")
+var isNavigate = true
 class Login extends Component {
 
     constructor(props) {
@@ -19,16 +20,16 @@ class Login extends Component {
             password: "",
             inputUsername: "",
             inputPassword: "",
-            isLoggedIn: false,
+            //isLoggedIn: false,
             zipCode:''
         }
 
         console.log("constructor");
-        this.saveData();
+        //this.saveData();
     }
     shouldComponentUpdate(nextProps) {
-        if (nextProps.isLoggedIn){
-            this.props.navigation.navigate("WeatherReportList");
+        if (nextProps.isLoggedIn && isNavigate){
+            this.props.navigation.navigate("WeatherReportList",{callLogin:this.changeLoginState.bind(this)});
         }
         return true;
     }
@@ -37,18 +38,21 @@ class Login extends Component {
         AsyncStorage.getItem('userId').then((value) => this.setState({ 'userName': value }));
         AsyncStorage.getItem('password').then((value) => this.setState({ 'password': value }));
     }
-    saveData = async () => {
-        let userId = "moumita";
-        let password = "password";
-        console.log("save data");
-        try {
-            await AsyncStorage.setItem('userId', userId);
-            await AsyncStorage.setItem('password', password);
-        } catch (error) {
-            // Error retrieving data
-            console.log(error.message);
-        }
+    changeLoginState = () => {
+      this.props.checkLogin(true);
     }
+    // saveData = async () => {
+    //     let userId = "moumita";
+    //     let password = "password";
+    //     console.log("save data");
+    //     try {
+    //         await AsyncStorage.setItem('userId', userId);
+    //         await AsyncStorage.setItem('password', password);
+    //     } catch (error) {
+    //         // Error retrieving data
+    //         console.log(error.message);
+    //     }
+    // }
     savezipCode = async () => {
         try {
             console.log('zipcode saved')
@@ -60,10 +64,11 @@ class Login extends Component {
         }
     }
     handleZipCode = (text) => {
+        isNavigate = false;
         this.setState({ zipCode: text })
      }
     formValidate = async () => {
-        const { inputUsername, inputPassword, isLoggedIn } = this.state;
+        const { inputUsername, inputPassword} = this.state;
         let myusername = this.state.userName;
         let mypassword = this.state.password;
         let zipCode = this.state.zipCode;
@@ -74,7 +79,8 @@ class Login extends Component {
         else if (inputUsername == myusername && inputPassword == mypassword) {
             if (zipCode.length == 6){
                 this.savezipCode();
-                this.props.checkLogin(isLoggedIn);
+                isNavigate = true;
+                this.props.checkLogin(false);
                 Alert.alert('Success!');
             } else {
                 Alert.alert('Please provide valid zip code');

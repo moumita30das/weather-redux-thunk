@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
-import {StyleSheet,View,Text,SectionList,ActivityIndicator} from 'react-native';
+import {StyleSheet,View,Text,SectionList,ActivityIndicator,TouchableOpacity,Alert} from 'react-native';
 import  fetchActionCreator  from '../actionCreator/weatherActionCreator';
 import { connect } from 'react-redux';
-import ListItem from './ListItem';
+import { checkLogin } from '../actions/action';
+import ListItem from './listItem';
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from '@react-native-community/async-storage';
-
+var self
  class weatherList extends Component {
-
+    // static navigationOptions = {
+    //   //let headerTitleStyle = { color: 'red'};
+    //   headerRight:()=> { return <TouchableOpacity 
+    //     style={{backgroundColor: "#50D9EA",width:100,height:30}} onPress={self.goBack}>
+    //        <Text>Go Back</Text>
+    //     </TouchableOpacity>}
+    //   //return { headerTitleStyle,headerRight }
+    // }
     constructor(props){
         super(props);
         this.state = {
@@ -15,8 +23,13 @@ import AsyncStorage from '@react-native-community/async-storage';
          isConnected: false,
          zipCode:''
         };
+        self = this;
+      
     }
-    
+    componentWillUnmount(){
+     const {params} = this.props.navigation.state;
+     params.callLogin();
+    }
    componentDidMount = async () => { 
      console.log("data is persisted",this.props.data);  
      await AsyncStorage.getItem('zipCode').then((value) => this.setState({ 'zipCode': value }));
@@ -43,6 +56,32 @@ import AsyncStorage from '@react-native-community/async-storage';
     });
     unsubscribe();
    }
+    modifyData = (forecastData) => {
+       let data = [
+        {
+          title: " Day 1 ",
+          data:forecastData.slice(0,8)
+     
+        },
+        {
+          title: " Day 2 ",
+          data: forecastData.slice(8,16)
+        },
+        {
+          title: " Day 3 ",
+          data: forecastData.slice(16,24)
+        },
+        {
+          title: " Day 4 ",
+          data: forecastData.slice(24,32)
+        },
+        {
+          title: " Day 5 ",
+          data: forecastData.slice(32,40)
+        },
+      ]
+      return data;
+    }
     render() {
         const forecastData = this.props.data;
         console.log("forecast list in render",forecastData);
@@ -56,29 +95,7 @@ import AsyncStorage from '@react-native-community/async-storage';
                 <ActivityIndicator size='large' color='#000' />
               </View>);
           };
-        const DATA = [
-            {
-              title: " Day 1 ",
-              data:forecastData.slice(0,8)
-         
-            },
-            {
-              title: " Day 2 ",
-              data: forecastData.slice(8,16)
-            },
-            {
-              title: " Day 3 ",
-              data: forecastData.slice(16,24)
-            },
-            {
-              title: " Day 4 ",
-              data: forecastData.slice(24,32)
-            },
-            {
-              title: " Day 5 ",
-              data: forecastData.slice(32,40)
-            },
-          ];
+        const DATA = this.modifyData(forecastData);
         const SectionListItemSeparator = () => {
             return (
               <View style={styles.listItemSeparatorStyle} />
@@ -116,7 +133,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 }
 const mapDispatchToProps = dispatch => ({
     fetchActionCreator:(zipCode) => dispatch(fetchActionCreator(zipCode)),
-    requestPersistedForecastData: () => dispatch({ type: "API_CALL_RESTORE" })
+    requestPersistedForecastData: () => dispatch({ type: "API_CALL_RESTORE" }),
+    checkLogin:(isLoggedIn) => dispatch(checkLogin(isLoggedIn))
   });
 
 const mapStateToProps = state => ({
